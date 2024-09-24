@@ -1,35 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+export const App = () => {
+  const [thread, setThread] = useState([]);
+
+  useEffect(() => {
+    getData(); // getDateではなくgetDataに変更
+  }, []);
+
+  const getData = () => {
+    fetch('https://railway.bulletinboard.techtrain.dev/threads?offset=20')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('データは取得できませんでした');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // 取得したAPIデータをログに出力して確認
+        console.log('APIから取得したデータ:', data);
+
+        // データの構造を確認
+        if (data && Array.isArray(data)) {
+          setThread(data); // 取得したデータが配列ならそのままセット
+        } else {
+          console.error('スレッドデータが見つかりません');
+        }
+      })
+      .catch((error) => {
+        console.error('エラーが発生しました:', error);
+      });
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <header>掲示板</header>
+      <p>新着スレッド</p>
+      <ul>
+        {thread.map((threadItem) => (
+          <li key={threadItem.id}>{threadItem.title}</li>
+        ))}
+      </ul>
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
