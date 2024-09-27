@@ -3,9 +3,49 @@ header {
   font-size: 30px;
   background-color: #66d48b;
   color: #ffffff;
-  margin: 0;
+  padding: 10px;
 }
-p {
+
+h1 {
   text-align: center;
   font-size: 25px;
+}
+
+.create-thread-link {
+  width: 229px;
+  height: 60px;
+  position: absolute; /* 絶対配置 */
+  top: 0; /* 上から0px */
+  right: 0; /* 右から0px */
+  margin: 10px; /* 画面端にくっつかないようにマージンを少し追加 */
+}
+
+ul {
+  list-style-type: none; /* デフォルトのリストマーカーを消す */
+}
+
+button {
+  display: block; /* ボタンをブロック要素にする */
+  margin: 20px auto; /* 横方向を自動で中央に揃える */
+  padding: 5px 20px; /* ボタンに余白を追加（任意） */
+  text-align: center; /* テキストを中央揃え */
+  font-size: 10px; /* フォントサイズを適宜調整 */
+}
+
+textarea {
+  display: block; /* テキストエリアをブロック要素にする */
+  margin: 20px auto; /* 横方向を自動で中央に揃える */
+  width: 50%; /* テキストエリアの幅を指定（調整可能） */
+  height: 100px; /* テキストエリアの高さを指定（調整可能） */
+  padding: 10px; /* 内側に余白を追加 */
+  font-size: 14px; /* フォントサイズを調整 */
+  box-sizing: border-box; /* パディングとボーダーを含めた幅の計算 */
+}
+
+.back-to-top-link {
+  display: block; /* ブロック要素にして幅を持たせる */
+  width: 200px; /* リンクの幅を指定 */
+  text-align: center; /* テキストを中央に配置 */
+  margin: 20px auto; /* 上下に余白を取り、左右を自動で中央揃え */
+  padding: 10px;
 }

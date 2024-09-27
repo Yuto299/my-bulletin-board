@@ -1,15 +1,17 @@
+import { Routes, Route, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import ThreadCreate from './ThreadCreate';
 import './App.css';
 
 export const App = () => {
-  const [thread, setThread] = useState([]);
+  const [threads, setThreads] = useState([]);
 
   useEffect(() => {
-    getData(); // getDateではなくgetDataに変更
+    getData();
   }, []);
 
   const getData = () => {
-    fetch('https://railway.bulletinboard.techtrain.dev/threads?offset=20')
+    fetch('https://railway.bulletinboard.techtrain.dev/threads?offset=0')
       .then((response) => {
         if (!response.ok) {
           throw new Error('データは取得できませんでした');
@@ -17,12 +19,8 @@ export const App = () => {
         return response.json();
       })
       .then((data) => {
-        // 取得したAPIデータをログに出力して確認
-        console.log('APIから取得したデータ:', data);
-
-        // データの構造を確認
-        if (data && Array.isArray(data)) {
-          setThread(data); // 取得したデータが配列ならそのままセット
+        if (data) {
+          setThreads(data);
         } else {
           console.error('スレッドデータが見つかりません');
         }
@@ -35,12 +33,23 @@ export const App = () => {
   return (
     <>
       <header>掲示板</header>
-      <p>新着スレッド</p>
-      <ul>
-        {thread.map((threadItem) => (
-          <li key={threadItem.id}>{threadItem.title}</li>
-        ))}
-      </ul>
+      <h1>新着スレッド</h1>
+      <div className='App'>
+        <p>
+          <Link to='/threads/new' className='create-thread-link'>
+            スレッドをたてる
+          </Link>
+        </p>
+        <ul>
+          {threads.map((thread) => (
+            <li key={thread.id}>{thread.title}</li>
+          ))}
+        </ul>
+      </div>
+
+      <Routes>
+        <Route path='/threads/new' element={<ThreadCreate />} />
+      </Routes>
     </>
   );
 };
