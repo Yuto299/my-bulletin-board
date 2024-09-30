@@ -49,3 +49,17 @@ textarea {
   margin: 20px auto; /* 上下に余白を取り、左右を自動で中央揃え */
   padding: 10px;
 }
+
+.thread-detail-link {
+  position: absolute; /* 絶対配置 */
+  bottom: 0; /* 下から0pxに配置 */
+  right: 0; /* 右から0pxに配置 */
+  margin: 20px; /* 右下の画面端から少し余白を追加 */
+  padding: 10px 20px; /* 内側の余白を指定 */
+  text-align: center; /* テキストを中央揃え */
+}
+
+.container {
+  position: relative; /* 子要素の絶対配置を基準にするために必要 */
+  min-height: 100vh; /* コンテンツが少ない場合でも親要素が画面全体を覆うようにする */
+}
