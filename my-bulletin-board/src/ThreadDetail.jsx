@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 const ThreadDetail = () => {
-  const { thread_id } = useParams(); // スレッドIDを取得
-  const [posts, setPosts] = useState([]); // 投稿リストを管理するstate
-  const [newPost, setNewPost] = useState(''); // 新しい投稿を管理するstate
-  const [loading, setLoading] = useState(true); // ローディング状態を管理するstate
-  const [error, setError] = useState(null); // エラーを管理するstate
+  const { thread_id } = useParams(); // URLパラメータからthread_idを取得
+  const [posts, setPosts] = useState([]); // 投稿リストを管理
+  const [newPost, setNewPost] = useState(''); // 新しい投稿を管理
+  const [loading, setLoading] = useState(true); // ローディング状態
+  const [error, setError] = useState(null); // エラーはない
 
-  // APIから投稿データを取得する関数
-  const fetchPosts = () => {
-    fetch(`https://railway.bulletinboard.techtrain.dev/threads/8873f959-2123-46f0-b7d9-4ed6c46f553f/posts?offset=0`)
+  // APIから投稿データを取得する
+  const fetchPosts = useCallback(() => {
+    fetch(`https://railway.bulletinboard.techtrain.dev/threads/${thread_id}/posts?offset=0`)
       .then((response) => {
         if (response.ok === false) {
           throw new Error('投稿データの取得に失敗しました');
@@ -18,7 +18,7 @@ const ThreadDetail = () => {
         return response.json();
       })
       .then((data) => {
-        setPosts(data.posts); // サーバーから取得した投稿データをセット
+        setPosts(data.posts);
         setLoading(false);
       })
       .catch((error) => {
@@ -26,14 +26,13 @@ const ThreadDetail = () => {
         setError(error.message);
         setLoading(false);
       });
-  };
-
-  // コンポーネントがマウントされた時、投稿データを取得
-  useEffect(() => {
-    fetchPosts();
   }, [thread_id]);
 
-  // 投稿を追加する関数
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
+
+  // 投稿を追加する
   const handleSubmit = () => {
     if (newPost.trim() === '') {
       alert('投稿内容を入力してください');
@@ -41,7 +40,7 @@ const ThreadDetail = () => {
     }
 
     // APIに新しい投稿を送信
-    fetch('https://railway.bulletinboard.techtrain.dev/threads/8873f959-2123-46f0-b7d9-4ed6c46f553f/posts?offset=0', {
+    fetch(`https://railway.bulletinboard.techtrain.dev/threads/${thread_id}/posts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -72,17 +71,16 @@ const ThreadDetail = () => {
   }
 
   if (error) {
-    return <div>エラーが発生しました: {error}</div>;
+    return <div>エラーが発生しました</div>;
   }
 
   return (
     <div>
       <h1>スレッド詳細</h1>
       <ul>
-        {posts.length > 0 ? posts.map((post) => <li key={post.id}>{post.post}</li>) : <li>投稿がありません。</li>}
+        {posts.length > 0 && posts.map((post) => <li key={post.id}>{post.post}</li>)}
+        {posts.length === 0 && <li>投稿がありません。</li>}
       </ul>
-
-      {/* 新しい投稿の入力エリア */}
       <textarea
         name='テキストエリア'
         value={newPost}
@@ -93,7 +91,7 @@ const ThreadDetail = () => {
       {/* 投稿ボタン */}
       <button onClick={handleSubmit}>投稿</button>
 
-      {/* Topページに戻るリンク */}
+      {/* Topページに戻る */}
       <Link to='/' className='back-to-top-link'>
         Topに戻る
       </Link>

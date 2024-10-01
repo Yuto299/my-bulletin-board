@@ -3,10 +3,11 @@ import { useState, useEffect } from 'react';
 import ThreadCreate from './ThreadCreate';
 import './App.css';
 import ThreadDetail from './ThreadDetail';
+import ThreadList from './ThreadList';
 
 export const App = () => {
   const [threads, setThreads] = useState([]);
-  const navigate = useNavigate(); // ページ遷移に使用するためのフック
+  const navigate = useNavigate(); // ページ遷移
 
   useEffect(() => {
     getData();
@@ -47,29 +48,10 @@ export const App = () => {
           スレッドをたてる
         </Link>
       </p>
-      <p>
-        <Link to='/threads/:thread_id' className='thread-detail-link'>
-          スレッドの詳細情報を取得する
-        </Link>
-      </p>
 
       {/* Routesを使ってページごとに表示する部分 */}
       <Routes>
-        <Route
-          path='/'
-          element={
-            <div>
-              <h1>新着スレッド</h1>
-              <div className='App'>
-                <ul>
-                  {threads.map((thread) => (
-                    <li key={thread.id}>{thread.title}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          }
-        />
+        <Route path='/' element={<ThreadList threads={threads} />} />
         <Route path='/threads/new' element={<ThreadCreate addThread={addThread} />} />
         <Route path='/threads/:thread_id' element={<ThreadDetail />} />
       </Routes>
